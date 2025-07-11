@@ -1,0 +1,108 @@
+============================================================
+CLAUDE.md DRY RUN REPORT
+============================================================
+Generated: 2025-07-07 14:32:15
+
+SUMMARY
+--------------------
+✅ Added sections: 4
+❌ Removed sections: 1
+📝 Modified sections: 7
+⚠️  Conflicts: 0
+🚫 Policy violations: 2
+
+ADDED SECTIONS
+--------------------
++ Docker Multi-Stage Patterns (from: company)
++ Kubernetes Best Practices (from: company)
++ React Hook Guidelines (from: project)
++ Local Development Shortcuts (from: developer)
+
+REMOVED SECTIONS
+--------------------
+- Legacy Code Patterns (was from: universal)
+
+MODIFIED SECTIONS
+--------------------
+~ Python Virtual Environment
+  Before: universal
+  After: company
+~ Testing Standards
+  Before: universal
+  After: company
+~ Security Practices
+  Before: universal
+  After: company
+~ API Design Patterns
+  Before: universal
+  After: project
+~ Git Workflow
+  Before: company
+  After: project
+~ Code Review Process
+  Before: company
+  After: developer
+~ Debugging Setup
+  Before: project
+  After: developer
+
+⚠️  POLICY VIOLATIONS
+--------------------
+❌ Section: Security Practices
+   Policy: Cannot override company policy
+   Attempted by: project
+❌ Section: Testing Standards
+   Policy: Cannot override company policy
+   Attempted by: developer
+
+PREVIEW (first 50 lines)
+--------------------
+# CLAUDE.md - Generated 2025-07-07 14:32:15
+
+*This file is auto-generated from 3-tier template system. Do not edit directly.*
+
+## Project Overview
+Tech stack, architecture, and key decisions
+
+## ⚠️ CRITICAL: Python Virtual Environment (venv)
+**ALWAYS check for and use virtual environment before installing Python packages!**
+
+```bash
+# Check if venv is activated
+if [[ "$VIRTUAL_ENV" != "" ]]; then
+    echo "✅ Virtual environment is active: $VIRTUAL_ENV"
+else
+    echo "❌ ERROR: No virtual environment active!"
+    # Check common locations
+    if [ -d "venv" ]; then
+        echo "Found venv/ - activating..."
+        source venv/bin/activate
+    elif [ -d ".venv" ]; then
+        echo "Found .venv/ - activating..."
+        source .venv/bin/activate
+    else
+        echo "Creating new virtual environment..."
+        python -m venv venv
+        source venv/bin/activate
+    fi
+fi
+
+# Now safe to install
+pip install -r requirements.txt
+```
+
+## Docker Multi-Stage Patterns
+Best practices for efficient Docker builds
+
+### Python Multi-Stage Example
+```dockerfile
+# Stage 1: Build dependencies
+FROM python:3.11-slim as builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /wheels -r requirements.txt
+
+# Stage 2: Runtime
+FROM python:3.11-slim
+WORKDIR /app
+... (truncated)

@@ -1,0 +1,272 @@
+openapi: 3.1.0
+info:
+  title: ${PROJECT_NAME} API
+  version: 1.0.0
+  description: |
+    ${PROJECT_DESCRIPTION}
+    
+  x-terminology:  # Document your naming choices
+    validate: "Action to check compliance"
+    validation: "Result/process of validating"
+    token: "Design system unit"
+    
+servers:
+  - url: https://api.${DOMAIN}/v1
+    description: Production API
+  - url: http://localhost:${PORT:-8000}/api/v1
+    description: Local development
+
+tags:
+  - name: resources
+    description: Resource management operations
+
+paths:
+  # Resource-based paths (plural nouns)
+  /resources:
+    get:
+      tags: [resources]
+      operationId: listResources
+      summary: List all resources
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Resource'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+    
+    post:
+      tags: [resources]
+      operationId: createResource
+      summary: Create a new resource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateResourceRequest'
+      responses:
+        '201':
+          description: Resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+          
+  /resources/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      tags: [resources]
+      operationId: getResource
+      summary: Get a specific resource
+      responses:
+        '200':
+          description: Resource found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      tags: [resources]
+      operationId: updateResource
+      summary: Update a resource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateResourceRequest'
+      responses:
+        '200':
+          description: Resource updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    
+    delete:
+      tags: [resources]
+      operationId: deleteResource
+      summary: Delete a resource
+      responses:
+        '204':
+          description: Resource deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  schemas:
+    Resource:
+      type: object
+      required: [id, name, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Resource name
+        description:
+          type: string
+          nullable: true
+          description: Optional description
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          
+    CreateResourceRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Resource name
+        description:
+          type: string
+          nullable: true
+          description: Optional description
+          
+    UpdateResourceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Resource name
+        description:
+          type: string
+          nullable: true
+          description: Optional description
+    
+    Error:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          description: Error message
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error details
+          
+    ValidationError:
+      type: object
+      required: [message, errors]
+      properties:
+        message:
+          type: string
+          default: "Validation failed"
+        errors:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+                description: Field name
+              message:
+                type: string
+                description: Error message
+              code:
+                type: string
+                description: Error code
+                
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+            
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+      
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token authentication
+
+# Spectral rules for consistency
+x-spectral-rules:
+  path-naming:
+    message: "Paths should be kebab-case plural nouns"
+    given: "$.paths[*]~"
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: "^/[a-z-]+(/[a-z-]+|/{[a-z]+})*$"
+        
+  operation-id-naming:
+    message: "Operation IDs should be camelCase and start with a verb"
+    given: "$.paths[*][*].operationId"
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(get|list|create|update|delete|validate|export|import)[A-Z].*"

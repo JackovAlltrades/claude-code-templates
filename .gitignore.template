@@ -1,0 +1,69 @@
+# Port Management
+.ports.env
+*.port
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+!.env.example
+!.ports.env.example
+
+# Dependencies
+node_modules/
+venv/
+env/
+.venv/
+vendor/
+
+# Build outputs
+dist/
+build/
+out/
+target/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.coverage
+.pytest_cache/
+.phpunit.result.cache
+htmlcov/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.cache
+
+# OS Files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Security
+*.pem
+*.key
+*.cert
+*.crt
+.secrets/
+private/

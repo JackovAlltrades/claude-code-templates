@@ -1,0 +1,151 @@
+# Claude Template System Configuration
+version: 1.0.0
+system_type: tiered
+
+# Update management
+updates:
+  auto_check: true
+  frequency: weekly
+  channels:
+    - stable  # Production-ready updates
+    # - beta  # Early access features
+  
+  # Update strategy
+  strategy:
+    non_breaking: auto_merge
+    breaking: create_pr
+    security: immediate_notify
+
+# Inheritance configuration
+inheritance:
+  # How sections are merged
+  merge_strategy: deep  # deep, shallow, replace
+  
+  # Conflict resolution
+  conflict_resolution: 
+    default: override  # override, merge, prompt
+    by_source:
+      universal_to_company: override
+      company_to_project: check_policy
+      project_to_developer: override
+  
+  # Section tracking
+  track_changes: true
+  preserve_checksums: true
+
+# Template sources
+sources:
+  universal:
+    type: git
+    repo: https://github.com/anthropics/claude-templates
+    branch: main
+    path: claude-system/base
+    
+  # Alternative sources (future)
+  # universal:
+  #   type: https
+  #   url: https://api.anthropic.com/claude-templates/v1
+  #   auth: token
+
+# Feature flags
+features:
+  role_based_templates: true
+  developer_customization: true
+  audit_trail: true
+  auto_pr_creation: true
+  conflict_detection: true
+  
+# Security policies
+security:
+  # Sections that cannot be overridden
+  protected_sections:
+    - "Security Practices"
+    - "Compliance Requirements"
+    - "Data Protection"
+    
+  # Required sections in all templates
+  required_sections:
+    - "Security Checklist"
+    - "Error Handling"
+    - "Logging Standards"
+    
+  # Audit settings
+  audit:
+    log_overrides: true
+    require_justification: true
+    approval_for_protected: true
+
+# Template validation
+validation:
+  # Ensure required sections exist
+  check_required_sections: true
+  
+  # Validate section content
+  content_rules:
+    - pattern: "TODO|FIXME|XXX"
+      severity: warning
+      message: "Unresolved TODO found"
+      
+    - pattern: "password|secret|key"
+      severity: error
+      message: "Potential hardcoded secret"
+      location: "code_blocks"
+  
+  # Structure validation
+  max_section_depth: 6
+  max_file_size: 1048576  # 1MB
+
+# Notification settings
+notifications:
+  # Update notifications
+  updates:
+    channel: email
+    recipients: ["team-leads@company.com"]
+    
+  # Security alerts
+  security:
+    channel: slack
+    webhook: "${SLACK_WEBHOOK_URL}"
+    urgent: true
+    
+  # Conflict notifications
+  conflicts:
+    channel: github_issue
+    auto_assign: true
+
+# Performance settings
+performance:
+  # Caching
+  cache:
+    enabled: true
+    ttl: 3600  # 1 hour
+    location: "~/.claude-templates/.cache"
+    
+  # Parallel processing
+  parallel:
+    enabled: true
+    max_workers: 4
+    
+# Logging
+logging:
+  level: info  # debug, info, warning, error
+  file: "~/.claude-templates/logs/system.log"
+  max_size: 10485760  # 10MB
+  rotate: true
+  retain_days: 30
+
+# Backup settings
+backup:
+  enabled: true
+  location: "~/.claude-templates/backups"
+  before_update: true
+  retain_versions: 5
+
+# Telemetry (optional, anonymized)
+telemetry:
+  enabled: false  # Opt-in only
+  anonymous: true
+  metrics:
+    - template_usage
+    - merge_conflicts
+    - update_frequency

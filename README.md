@@ -1,102 +1,220 @@
-# Claude Code Templates - Expert Approved
+# 🚀 Claude Templates - Lean Development System
 
-Expert-approved templates for Claude Code development following the simplified CODE → REVIEW → DEPLOY workflow.
+## 📚 Documentation Hub
+
+| Guide | Description |
+|-------|------------|
+| [**🎯 CHEAT SHEET**](CHEAT_SHEET.md) | Quick reference for all commands |
+| [**📖 System Guide**](guides/CLAUDE_SYSTEM_GUIDE.md) | Complete system overview and setup |
+| [**🔌 Port Manager Guide**](guides/PORT_MANAGER_GUIDE.md) | Detailed port management documentation |
+| [**🤖 MCP Setup Guide**](guides/MCP_SETUP_GUIDE.md) | Model Context Protocol configuration |
+
+## Overview
+Reusable templates for rapid, standardized project initialization following lean principles.
+
+## 🚨 IMPORTANT: Port Management Setup
+
+Before starting ANY project, initialize the Universal Port Manager to prevent port conflicts:
+
+```bash
+# First time setup (one-time only)
+chmod +x ~/.claude-templates/scripts/port-manager.py
+
+# For EVERY new project
+cd your-project
+python3 ~/.claude-templates/scripts/port-manager.py init .
+
+# This creates .ports.env with assigned ports:
+# WEB_PORT=8000
+# API_PORT=8100
+# DB_PORT=5400
+# etc.
+```
+
+## Available Templates
+
+### 1. OpenAPI Lean Template (`openapi-lean.yaml`)
+A complete OpenAPI 3.1 specification template following REST best practices:
+- Resource-based paths (plural nouns)
+- Verb-based operation IDs
+- Built-in Spectral validation rules
+- Standard error responses
+- Security schemes (API Key, JWT)
+- Terminology documentation via `x-terminology`
+
+**Usage:**
+```bash
+cp ~/.claude-templates/openapi-lean.yaml api/openapi.yaml
+# Edit to customize for your project
+```
+
+### 2. Lean API Initializer (`lean-api-init.sh`)
+Interactive script to bootstrap a new API project:
+- Creates directory structure
+- Generates customized OpenAPI spec
+- Sets up linting with Spectral
+- Adds Makefile targets
+- Creates FastAPI boilerplate
+- Configures git hooks
+
+**Usage:**
+```bash
+~/.claude-templates/lean-api-init.sh
+```
+
+### 3. Universal Port Manager (`scripts/port-manager.py`)
+Centralized port management system that prevents "Address already in use" errors:
+- Tracks all ports across all projects
+- Auto-assigns ports by service type
+- Shows what's using each port
+- Integrates with Docker, Make, Node.js, Python
+
+**Usage:**
+```bash
+# Initialize project ports
+python3 ~/.claude-templates/scripts/port-manager.py init .
+
+# Check port status
+python3 ~/.claude-templates/scripts/port-manager.py status
+
+# Free a port
+python3 ~/.claude-templates/scripts/port-manager.py free 8080
+```
+
+### 4. Master Makefile (Coming Soon)
+Standard Makefile with:
+- Security checks
+- API validation
+- Test commands
+- Documentation generation
+- Deployment helpers
+- Port management integration
 
 ## 🚀 Quick Start
 
+### First Time Setup
 ```bash
-# Clone this repository
-git clone git@github.com:JackovAlltrades/claude-code-templates.git ~/.claude-templates
+# 1. Clone Claude Templates
+cd ~/workspace
+git clone <repo> .claude-templates
 
-# Set up aliases
-echo 'alias claude-patterns="head -50 ~/.claude-templates/engineer-instructions.md"' >> ~/.bashrc
-echo 'alias claude-setup="~/.claude-templates/project-setup.sh"' >> ~/.bashrc
-echo 'alias claude-templates="cd ~/.claude-templates && ls -la"' >> ~/.bashrc
-echo 'alias claude-rules="cat ~/.claude-templates/warp-rules.md"' >> ~/.bashrc
+# 2. Run setup
+cd .claude-templates
+./setup.sh
+
+# 3. Reload shell
 source ~/.bashrc
-
-# Create your first project
-claude-setup my-new-project
 ```
 
-## 📁 Files
-
-- `claude-base-template.md` - Base CLAUDE.md template for new projects
-- `engineer-instructions.md` - Expert-approved 80/20 command patterns
-- `warp-rules.md` - Refined development workflow rules (reference)
-- `project-setup.sh` - Automated project setup script
-- `PRACTICAL_USAGE.md` - **Detailed usage scenarios and best practices**
-
-## 📖 Documentation
-
-### Essential Reading
-1. **[PRACTICAL_USAGE.md](./PRACTICAL_USAGE.md)** - Daily workflows, scenarios, and best practices
-2. **[engineer-instructions.md](./engineer-instructions.md)** - 80/20 command patterns
-3. **[warp-rules.md](./warp-rules.md)** - Core development principles
-
-### Usage Patterns
-
-**Daily Development:**
+### New Project Setup
 ```bash
-claude-patterns  # View 80/20 command patterns
-claude-rules     # Review workflow principles
+# 1. Create new project
+mkdir my-awesome-project && cd my-awesome-project
+
+# 2. Initialize ports (CRITICAL - Do this first!)
+port-manager init
+
+# 3. Apply a template (optional)
+~/.claude-templates/apply-template.sh saas-platform
+
+# 4. Initialize git
+git init
+
+# 5. Set up MCP (optional but recommended)
+./scripts/add-mcp-server-shared.sh --init
+./scripts/add-mcp-server-shared.sh --common
+
+# 6. Start developing!
+port-manager status  # Check ports
+./claude "Help me build..."  # Use Claude with MCP
 ```
 
-**New Project Setup:**
-```bash
-claude-setup project-name  # Automated project creation
+## Design Principles
+
+### 1. **Consistency Over Configuration**
+- Standard naming conventions (enforced by linting)
+- Single source of truth (OpenAPI spec)
+- Predictable project structure
+
+### 2. **Lean & Fast**
+- Minimal boilerplate
+- Quick to start, easy to extend
+- Focus on what matters
+
+### 3. **Quality Built-In**
+- Automated validation
+- Git hooks for mistake prevention
+- Documentation as code
+
+### 4. **OpenAPI-First**
+- Design API before implementation
+- Generate code from spec
+- Automatic documentation
+- Type safety
+
+## Naming Conventions
+
+### Paths
+```yaml
+/resources          # Plural nouns
+/resources/{id}     # Resource by ID
+/resources/{id}/sub-resources  # Nested resources
 ```
 
-**Reference Workflow:**
-```bash
-# CODE → REVIEW → DEPLOY (3 steps, not 6 phases)
-claude "implement [feature] with error handling, validation, and tests"
-claude "review [component] for security and performance issues" 
-claude "prepare [changes] for production deployment with monitoring"
+### Operations
+```yaml
+operationId: listResources    # GET /resources
+operationId: createResource   # POST /resources
+operationId: getResource      # GET /resources/{id}
+operationId: updateResource   # PUT /resources/{id}
+operationId: deleteResource   # DELETE /resources/{id}
 ```
 
-## 🎯 Expert-Approved Principles
+### Schemas
+```yaml
+Resource              # Singular, PascalCase
+CreateResourceRequest # Request suffix
+UpdateResourceRequest # Action + Resource + Type
+ResourceResponse      # Response suffix
+```
 
-Based on feedback from **Linus Torvalds**, **Jakob Nielsen**, and **Bruce Schneier** principles:
+## Integration with Claude
 
-### Core Philosophy
-- **Perfection is the enemy of good** - Ship working code, iterate to improve
-- **Users don't read documentation** - Make the right thing the easy thing
-- **Security is about trade-offs** - Practical security, not security theater
-- **Automate boring stuff, think about hard stuff** - AI handles boilerplate, humans handle architecture
+When starting a new project with Claude:
 
-### 80/20 Rule Implementation
-- **Daily commands (80%):** Feature development, bug fixes, code review
-- **Weekly commands (15%):** Project health, dependency updates, security audits
-- **Setup commands (5%):** New projects, major configuration changes
+1. **Mention the template**: "Use the lean API template"
+2. **Provide context**: Project name, description, domain
+3. **Claude will**:
+   - Apply the template
+   - Follow naming conventions
+   - Set up validation
+   - Generate initial code
 
-### Success Metrics
-- ✅ Developer productive in **5 minutes**, not 5 hours
-- ✅ Common tasks have **clear, simple patterns**
-- ✅ Error recovery is **fast and systematic**
-- ✅ Security issues caught in **development, not production**
+## Customization
 
-## 🔧 Advanced Usage
+All templates support environment variables:
+- `${PROJECT_NAME}` - Your project name
+- `${PROJECT_DESCRIPTION}` - Brief description
+- `${DOMAIN}` - Your domain name
+- `${PORT}` - API port (default: 8000)
 
-See [PRACTICAL_USAGE.md](./PRACTICAL_USAGE.md) for:
-- Daily workflow scenarios
-- Team collaboration patterns
-- Security-first development approaches
-- Troubleshooting common issues
-- Building productive habits
+## Future Templates
 
-## 📊 Version History
+- [ ] Lean Makefile template
+- [ ] Docker Compose template
+- [ ] CI/CD pipeline templates (GitHub Actions, GitLab CI)
+- [ ] Python project template
+- [ ] TypeScript project template
+- [ ] Database migration template
 
-- **v1.0-expert-approved** - Initial expert-reviewed templates
-- **v1.1-practical-guide** - Added comprehensive usage scenarios
+## Contributing
 
-## 🤝 Contributing
+To add a new template:
+1. Create file in `~/.claude-templates/`
+2. Add documentation to this README
+3. Include usage examples
+4. Test with a sample project
 
-1. Follow the expert-approved principles
-2. Test patterns in real projects before suggesting
-3. Maintain the 80/20 focus (common use cases first)
-4. Update practical guide with new scenarios
+## License
 
-## 📄 License
-
-MIT License - Feel free to adapt for your team's needs while maintaining the core expert-approved principles.
+These templates are free to use and modify for any project.

@@ -1,0 +1,54 @@
+# Universal Dependabot configuration template
+# Customize based on your project needs
+
+version: 2
+updates:
+  # GitHub Actions - Universal for all projects
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "github-actions"
+      - "dependencies"
+
+  # Uncomment and configure based on your project type:
+  
+  # Python
+  # - package-ecosystem: "pip"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   allowed-updates:
+  #     - dependency-type: "security"
+  #   commit-message:
+  #     prefix: "security"
+  
+  # Node.js  
+  # - package-ecosystem: "npm"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   allowed-updates:
+  #     - dependency-type: "security"
+  
+  # Go
+  # - package-ecosystem: "gomod"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  
+  # Ruby
+  # - package-ecosystem: "bundler"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  
+  # Docker
+  # - package-ecosystem: "docker"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
