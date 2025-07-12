@@ -6,8 +6,26 @@
 |-------|------------|
 | [**🎯 CHEAT SHEET**](CHEAT_SHEET.md) | Quick reference for all commands |
 | [**📖 System Guide**](guides/CLAUDE_SYSTEM_GUIDE.md) | Complete system overview and setup |
-| [**🔌 Port Manager Guide**](guides/PORT_MANAGER_GUIDE.md) | Detailed port management documentation |
+| [**🔌 Port Manager Guide**](guides/PORT_MANAGER_GUIDE.md) | Basic port management documentation |
+| [**🧠 Intelligent Port Guide**](guides/INTELLIGENT_PORT_GUIDE.md) | Advanced automatic port management |
 | [**🤖 MCP Setup Guide**](guides/MCP_SETUP_GUIDE.md) | Model Context Protocol configuration |
+| [**⚡ Setup Instructions**](SETUP_INTELLIGENT_PORTS.md) | How to install intelligent port system |
+
+## 🆕 New: Intelligent Port Management
+
+Automatically allocates ports based on service type, prevents conflicts, and tracks lifecycle from dev to production!
+
+```bash
+# Quick setup (5 minutes)
+./setup-intelligent-ports.sh
+
+# Then use automatic port allocation
+docker-compose up  # Auto-allocates all ports
+npm start         # Auto-allocates web port
+python app.py     # Auto-allocates API port
+```
+
+[**→ Full Setup Instructions**](SETUP_INTELLIGENT_PORTS.md)
 
 ## Overview
 Reusable templates for rapid, standardized project initialization following lean principles.
@@ -63,13 +81,13 @@ Interactive script to bootstrap a new API project:
 ```
 
 ### 3. Universal Port Manager (`scripts/port-manager.py`)
-Centralized port management system that prevents "Address already in use" errors:
+Basic port management system that prevents "Address already in use" errors:
 - Tracks all ports across all projects
 - Auto-assigns ports by service type
 - Shows what's using each port
 - Integrates with Docker, Make, Node.js, Python
 
-**Usage:**
+**Basic Usage:**
 ```bash
 # Initialize project ports
 python3 ~/.claude-templates/scripts/port-manager.py init .
@@ -81,7 +99,31 @@ python3 ~/.claude-templates/scripts/port-manager.py status
 python3 ~/.claude-templates/scripts/port-manager.py free 8080
 ```
 
-### 4. Master Makefile (Coming Soon)
+### 4. 🧠 Intelligent Port Manager (`scripts/intelligent-port-manager.py`)
+Advanced automatic port management with AI-like intelligence:
+- **Auto-detects service types** from names (web, api, database, etc.)
+- **Industry-standard port ranges** (PostgreSQL: 5432-5499, Redis: 6379-6399, etc.)
+- **Environment-aware** (different ports for dev/staging/prod)
+- **Workflow hooks** for docker-compose, npm, yarn, python
+- **Lifecycle tracking** from development to production
+- **LLM-friendly export** for AI assistance
+
+**Intelligent Usage:**
+```bash
+# Auto-detect and allocate
+ipm allocate my-postgres-db  # Automatically uses PostgreSQL range
+
+# With workflow hooks
+source scripts/port-hooks.sh
+docker-compose up  # All ports allocated automatically!
+
+# Lifecycle management
+plm promote my-api development staging
+```
+
+[**→ Full Intelligent Port Guide**](guides/INTELLIGENT_PORT_GUIDE.md)
+
+### 5. Master Makefile (Coming Soon)
 Standard Makefile with:
 - Security checks
 - API validation

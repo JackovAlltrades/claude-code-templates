@@ -2,7 +2,7 @@
 
 ## 🎯 Quick Commands
 
-### Port Management
+### Port Management (Basic)
 ```bash
 # Check all ports
 port-manager status
@@ -18,6 +18,50 @@ port-manager init
 
 # Clean dead registrations
 port-manager clean
+```
+
+### 🧠 Intelligent Port Management
+```bash
+# Auto-allocate port by service type
+python3 scripts/intelligent-port-manager.py allocate my-api --type api
+
+# Check intelligent status
+python3 scripts/intelligent-port-manager.py status
+
+# Sync registry with actual usage
+python3 scripts/intelligent-port-manager.py sync
+
+# Show standard port ranges
+python3 scripts/intelligent-port-manager.py ranges
+
+# Export for LLM
+python3 scripts/intelligent-port-manager.py export-llm
+
+# Enable auto-allocation hooks
+source scripts/port-hooks.sh
+port-hooks on
+
+# Quick commands with hooks enabled
+port-status      # Show allocated ports
+port-available   # Show available ranges
+port-sync        # Sync registry
+port-export      # Export project config
+port-llm         # Export for LLM
+```
+
+### 🔄 Port Lifecycle Management
+```bash
+# Initialize service lifecycle
+python3 scripts/port-lifecycle-manager.py init my-api api my-project
+
+# Promote through stages
+python3 scripts/port-lifecycle-manager.py promote my-api my-project development staging
+
+# Check lifecycle status
+python3 scripts/port-lifecycle-manager.py status
+
+# Export deployment configs
+python3 scripts/port-lifecycle-manager.py export staging --format docker
 ```
 
 ### Project Setup
@@ -61,19 +105,28 @@ lean deploy prod       # Deploy to production
 | Claude Config | `CLAUDE.md` (in each project) |
 | Global Claude | `~/.claude/CLAUDE.md` |
 
-## 🔧 Port Ranges
+## 🔧 Intelligent Port Ranges
 
-| Service Type | Port Range | Example |
-|-------------|------------|---------|
-| Web/Frontend | 8000-8099 | 8000, 8001 |
-| API/Backend | 8100-8199 | 8100, 8101 |
-| Databases | 5400-5499 | 5432 (Postgres) |
-| Cache/Redis | 6300-6399 | 6379 (Redis) |
-| Message Queue | 4200-4299 | 4222 (NATS) |
-| Monitoring | 9000-9099 | 9000 (Metrics) |
-| Documentation | 3000-3099 | 3000 (Docs) |
-| Workflow | 7200-7299 | 7233 (Temporal) |
-| Testing | 4400-4499 | 4444 (Selenium) |
+### Development Environment
+| Service Type | Port Range | Examples |
+|-------------|------------|----------|
+| Web/Frontend | 3000-3999 | React (3000), Vue (3001) |
+| API/Backend | 4000-4999 | REST (4000), GraphQL (4001) |
+| PostgreSQL | 5432-5499 | Postgres (5432) |
+| MySQL | 3306-3399 | MySQL (3306) |
+| MongoDB | 27017-27099 | MongoDB (27017) |
+| Redis/Cache | 6379-6399 | Redis (6379) |
+| RabbitMQ | 5672-5699 | RabbitMQ (5672) |
+| Kafka | 9092-9099 | Kafka (9092) |
+| Elasticsearch | 9200-9299 | Elastic (9200) |
+| Monitoring | 9090-9099 | Prometheus (9090) |
+| Temporal | 7233-7299 | Temporal (7233) |
+
+### Staging Environment
+Add 10000 to development ports (e.g., Web: 13000-13999)
+
+### Production Environment
+Uses standard ports (80, 443, 5432, etc.)
 
 ## 🚨 Common Issues & Fixes
 
