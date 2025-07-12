@@ -102,6 +102,31 @@ if [ -n "$SHELL_PROFILE" ]; then
     fi
 fi
 
+# Configure git for proper line endings
+echo -e "\n${YELLOW}Configuring git for LF line endings...${NC}"
+git config --global core.autocrlf input
+git config --global core.eol lf
+echo -e "${GREEN}✓ Git configured for LF endings${NC}"
+
+# Fix any existing line ending issues
+if [ -f "$TEMPLATE_DIR/scripts/fix-line-endings.sh" ]; then
+    echo -e "${YELLOW}Installing line ending fix script...${NC}"
+    cp -v "$TEMPLATE_DIR/scripts/fix-line-endings.sh" ~/.claude-templates/scripts/
+    chmod +x ~/.claude-templates/scripts/fix-line-endings.sh
+    
+    # Add alias for easy access
+    if [ -n "$SHELL_PROFILE" ] && ! grep -q "fix-line-endings" "$SHELL_PROFILE"; then
+        echo "alias fix-line-endings='bash ~/.claude-templates/scripts/fix-line-endings.sh'" >> "$SHELL_PROFILE"
+    fi
+fi
+
+# Copy .gitattributes template
+if [ -f "$TEMPLATE_DIR/.gitattributes" ]; then
+    echo -e "${YELLOW}Installing .gitattributes template...${NC}"
+    cp -v "$TEMPLATE_DIR/.gitattributes" ~/.claude-templates/
+    echo -e "${GREEN}✓ Line ending configuration installed${NC}"
+fi
+
 # Summary
 echo -e "\n${GREEN}✅ Installation Complete!${NC}"
 echo -e "\n${BLUE}Quick Start:${NC}"
